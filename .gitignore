@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+
+# HuggingFace model cache (large binaries, regenerate with export_onnx.py)
+minilm-model/
+minilm-onnx/
+
+# Downloaded dataset cache
+squad-cache/
