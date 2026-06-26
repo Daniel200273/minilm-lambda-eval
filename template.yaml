@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: MiniLM-L6-v2 semantic search over SQuAD — ONNX Lambda
+
+Parameters:
+  MemorySize:
+    Type: Number
+    Default: 512
+    AllowedValues: [512, 1024, 2048]
+    Description: Memory (MB) for the Lambda function
+
+Globals:
+  Function:
+    Timeout: 30
+    Architectures: [x86_64]
+
+Resources:
+  SearchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: !Ref MemorySize
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
+      Events:
+        Search:
+          Type: HttpApi
+          Properties:
+            Path: /search
+            Method: POST
+    Metadata:
+      DockerfileUri: lambda/onnx/Dockerfile
+      DockerContext: .
+      DockerTag: onnx-latest
+
+Outputs:
+  SearchEndpoint:
+    Description: POST /search — body {"query":"...","top_k":5}
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/search"

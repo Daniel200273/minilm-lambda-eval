@@ -2,9 +2,11 @@
 __pycache__/
 *.pyc
 
-# HuggingFace model cache (large binaries, regenerate with export_onnx.py)
+# Old HuggingFace cache dirs (large, regenerate with scripts/export_to_onnx.py)
 minilm-model/
 minilm-onnx/
 
 # Downloaded dataset cache
 squad-cache/
+
+# lambda/onnx/model.onnx and lambda/shared/data/ are intentionally committed
