@@ -1,0 +1,8 @@
+sentence-transformers
+torch
+optimum
+optimum-onnx
+onnxruntime
+transformers
+datasets
+numpy

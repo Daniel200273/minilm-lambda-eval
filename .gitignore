@@ -8,3 +8,7 @@ minilm-onnx/
 
 # Downloaded dataset cache
 squad-cache/
+
+# Local model export (regenerate with scripts/export_to_onnx.py)
+model/onnx/
+model/pytorch/

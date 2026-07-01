@@ -1,0 +1,602 @@
+[
+  {
+    "id": 0,
+    "question": "In what country is Normandy located?",
+    "bucket": "short",
+    "n_tokens": 6
+  },
+  {
+    "id": 1,
+    "question": "When were the Normans in Normandy?",
+    "bucket": "short",
+    "n_tokens": 6
+  },
+  {
+    "id": 2,
+    "question": "From which countries did the Norse originate?",
+    "bucket": "short",
+    "n_tokens": 7
+  },
+  {
+    "id": 3,
+    "question": "Who was the Norse leader?",
+    "bucket": "short",
+    "n_tokens": 5
+  },
+  {
+    "id": 4,
+    "question": "What is France a region of?",
+    "bucket": "short",
+    "n_tokens": 6
+  },
+  {
+    "id": 5,
+    "question": "Who did King Charles III swear fealty to?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 6,
+    "question": "When did the Frankish identity emerge?",
+    "bucket": "short",
+    "n_tokens": 6
+  },
+  {
+    "id": 7,
+    "question": "Who ruled the duchy of Normandy",
+    "bucket": "short",
+    "n_tokens": 6
+  },
+  {
+    "id": 8,
+    "question": "What religion were the Normans",
+    "bucket": "short",
+    "n_tokens": 5
+  },
+  {
+    "id": 9,
+    "question": "Who was famed for their Christian spirit?",
+    "bucket": "short",
+    "n_tokens": 7
+  },
+  {
+    "id": 10,
+    "question": "Who assimilted the Roman language?",
+    "bucket": "short",
+    "n_tokens": 5
+  },
+  {
+    "id": 11,
+    "question": "Who ruled the country of Normandy?",
+    "bucket": "short",
+    "n_tokens": 6
+  },
+  {
+    "id": 12,
+    "question": "What principality did William the conquerer found?",
+    "bucket": "short",
+    "n_tokens": 7
+  },
+  {
+    "id": 13,
+    "question": "What name comes from the English words Normans/Normanz?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 14,
+    "question": "When was the Duchy of Normandy founded?",
+    "bucket": "short",
+    "n_tokens": 7
+  },
+  {
+    "id": 15,
+    "question": "What river originally bounded the Duchy",
+    "bucket": "short",
+    "n_tokens": 6
+  },
+  {
+    "id": 16,
+    "question": "when did Nors encampments ivolve into destructive incursions?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 17,
+    "question": "What treaty was established in the 9th century?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 18,
+    "question": "When did Rollo begin to arrive in Normandy?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 19,
+    "question": "What Viking groups were conquered by Rollo?",
+    "bucket": "short",
+    "n_tokens": 7
+  },
+  {
+    "id": 20,
+    "question": "What was the Norman religion?",
+    "bucket": "short",
+    "n_tokens": 5
+  },
+  {
+    "id": 21,
+    "question": "What part of France were the Normans located?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 22,
+    "question": "What was replace with the Norse religion?",
+    "bucket": "short",
+    "n_tokens": 7
+  },
+  {
+    "id": 23,
+    "question": "What did maternal Old Norse traditions merge with?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 24,
+    "question": "What language replaced the Gallo-Romance language?",
+    "bucket": "short",
+    "n_tokens": 6
+  },
+  {
+    "id": 25,
+    "question": "What was one of the Norman's major exports?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 26,
+    "question": "Who adopted the fuedel doctrines of the Normans?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 27,
+    "question": "What was one of the Norman's major imports?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 28,
+    "question": "Who's arristocracy eventually served as avid Crusaders?",
+    "bucket": "short",
+    "n_tokens": 7
+  },
+  {
+    "id": 29,
+    "question": "Who entered Italy soon after the Byzantine Empire?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 30,
+    "question": "Who did the Normans fight in Italy?",
+    "bucket": "short",
+    "n_tokens": 7
+  },
+  {
+    "id": 31,
+    "question": "When did Herve serve as a Byzantine general?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 32,
+    "question": "When did Herve serve as a Norman general?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 33,
+    "question": "When did Herve go up against the Turks?",
+    "bucket": "short",
+    "n_tokens": 8
+  },
+  {
+    "id": 34,
+    "question": "What century did the Normans first gain their separate identity?",
+    "bucket": "medium",
+    "n_tokens": 10
+  },
+  {
+    "id": 35,
+    "question": "Who gave their name to Normandy in the 1000's and 1100's",
+    "bucket": "medium",
+    "n_tokens": 11
+  },
+  {
+    "id": 36,
+    "question": "Who was the duke in the battle of Hastings?",
+    "bucket": "medium",
+    "n_tokens": 9
+  },
+  {
+    "id": 37,
+    "question": "What type of major impact did the Norman dynasty have on modern Europe?",
+    "bucket": "medium",
+    "n_tokens": 13
+  },
+  {
+    "id": 38,
+    "question": "What is the original meaning of the word Norman?",
+    "bucket": "medium",
+    "n_tokens": 9
+  },
+  {
+    "id": 39,
+    "question": "When was the Latin version of the word Norman first recorded?",
+    "bucket": "medium",
+    "n_tokens": 11
+  },
+  {
+    "id": 40,
+    "question": "When was the French version of the word Norman first recorded?",
+    "bucket": "medium",
+    "n_tokens": 11
+  },
+  {
+    "id": 41,
+    "question": "Who did Rollo sign the treaty of Saint-Clair-sur-Epte with?",
+    "bucket": "medium",
+    "n_tokens": 9
+  },
+  {
+    "id": 42,
+    "question": "Who established a treaty with King Charles the third of France?",
+    "bucket": "medium",
+    "n_tokens": 11
+  },
+  {
+    "id": 43,
+    "question": "What did the French promises to protect Rollo and his men from?",
+    "bucket": "medium",
+    "n_tokens": 12
+  },
+  {
+    "id": 44,
+    "question": "Who upon arriving gave the original viking settlers a common identity?",
+    "bucket": "medium",
+    "n_tokens": 11
+  },
+  {
+    "id": 45,
+    "question": "Who was the Normans' main enemy in Italy, the Byzantine Empire and Armenia?",
+    "bucket": "medium",
+    "n_tokens": 13
+  },
+  {
+    "id": 46,
+    "question": "Who did the Normans encourage to come to the south?",
+    "bucket": "medium",
+    "n_tokens": 10
+  },
+  {
+    "id": 47,
+    "question": "During what campaign did the Vargian and Lombard fight?",
+    "bucket": "medium",
+    "n_tokens": 9
+  },
+  {
+    "id": 48,
+    "question": "When did Robert Crispin go up against the Turks?",
+    "bucket": "medium",
+    "n_tokens": 9
+  },
+  {
+    "id": 49,
+    "question": "Who ruined Roussel de Bailleul's plans for an independent state?",
+    "bucket": "medium",
+    "n_tokens": 10
+  },
+  {
+    "id": 50,
+    "question": "Who was the first Byzantine mercenary to serve with the Normans?",
+    "bucket": "medium",
+    "n_tokens": 11
+  },
+  {
+    "id": 51,
+    "question": "Who ruined Alexius Komnenos plans for an independent state?",
+    "bucket": "medium",
+    "n_tokens": 9
+  },
+  {
+    "id": 52,
+    "question": "Who was the leader when the Franks entered the Euphrates valley?",
+    "bucket": "medium",
+    "n_tokens": 11
+  },
+  {
+    "id": 53,
+    "question": "Who did the Normans team up with in Anatolia?",
+    "bucket": "medium",
+    "n_tokens": 9
+  },
+  {
+    "id": 54,
+    "question": "Who joined Norman forces in the destruction of the Armenians?",
+    "bucket": "medium",
+    "n_tokens": 10
+  },
+  {
+    "id": 55,
+    "question": "Who did the Normans serve under in the 10th century?",
+    "bucket": "medium",
+    "n_tokens": 10
+  },
+  {
+    "id": 56,
+    "question": "What expedition did George Maniaces lead in the 10th century?",
+    "bucket": "medium",
+    "n_tokens": 10
+  },
+  {
+    "id": 57,
+    "question": "What was the name of the count of Apulia",
+    "bucket": "medium",
+    "n_tokens": 9
+  },
+  {
+    "id": 58,
+    "question": "What fell to the Normans in the 10th century?",
+    "bucket": "medium",
+    "n_tokens": 9
+  },
+  {
+    "id": 59,
+    "question": "Where did the Normans and Byzantines sign the peace treaty?",
+    "bucket": "medium",
+    "n_tokens": 10
+  },
+  {
+    "id": 60,
+    "question": "Who did the Normans besiege in the 11th century?",
+    "bucket": "medium",
+    "n_tokens": 9
+  },
+  {
+    "id": 61,
+    "question": "When did Edward the Confessor's son return from his fathers refuge?",
+    "bucket": "medium",
+    "n_tokens": 11
+  },
+  {
+    "id": 62,
+    "question": "Who was the ruling class ahead of the Normans?",
+    "bucket": "medium",
+    "n_tokens": 9
+  },
+  {
+    "id": 63,
+    "question": "Who considered their land on the continent their most important holding?",
+    "bucket": "medium",
+    "n_tokens": 11
+  },
+  {
+    "id": 64,
+    "question": "Who identified themselves as French during the Hundred Years War?",
+    "bucket": "medium",
+    "n_tokens": 10
+  },
+  {
+    "id": 65,
+    "question": "In what year did the Norman's invade at Bannow Bay?",
+    "bucket": "medium",
+    "n_tokens": 10
+  },
+  {
+    "id": 66,
+    "question": "What culture did the Normans combine with in Ireland?",
+    "bucket": "medium",
+    "n_tokens": 9
+  },
+  {
+    "id": 67,
+    "question": "What method is not used to intuitively assess or quantify the amount of resources required to solve a computational problem??",
+    "bucket": "long",
+    "n_tokens": 20
+  },
+  {
+    "id": 68,
+    "question": "What field of computer science analyzes the resource requirements of a specific algorithm isolated unto itself within a given problem?",
+    "bucket": "long",
+    "n_tokens": 20
+  },
+  {
+    "id": 69,
+    "question": "What field of computer science analyzes all possible algorithms in aggregate to determine the resource requirements needed to solve to a given problem?",
+    "bucket": "long",
+    "n_tokens": 23
+  },
+  {
+    "id": 70,
+    "question": "What field of computer science is primarily concerned with determining the likelihood of whether or not a problem can ultimately be solved using algorithms?",
+    "bucket": "long",
+    "n_tokens": 24
+  },
+  {
+    "id": 71,
+    "question": "What is the process that asks a more specific question about all possible algorithms that could not be used to solve the same problem?",
+    "bucket": "long",
+    "n_tokens": 24
+  },
+  {
+    "id": 72,
+    "question": "By how many kilometers does the traveling salesman problem seek to classify a route between the 15 largest cities in Germany?",
+    "bucket": "long",
+    "n_tokens": 21
+  },
+  {
+    "id": 73,
+    "question": "How many miles does the traveling salesman problem seek to classify a route between the 15 smallest cities in Germany?",
+    "bucket": "long",
+    "n_tokens": 20
+  },
+  {
+    "id": 74,
+    "question": "Whose thesis states that the solution to a problem is solvable with reasonable resources assuming it allows for a polynomial time algorithm?",
+    "bucket": "long",
+    "n_tokens": 22
+  },
+  {
+    "id": 75,
+    "question": "Whose hypothesis states the the solution to a problem is solvable with reasonable resources assuming it allows for monoinomial time algorithm?",
+    "bucket": "long",
+    "n_tokens": 21
+  },
+  {
+    "id": 76,
+    "question": "What type of machine is a computational model that is not allowed to branch out to check many different possibilities at once?",
+    "bucket": "long",
+    "n_tokens": 22
+  },
+  {
+    "id": 77,
+    "question": "What is the expression used to identify any given series of problems capable of being solved within time on a deterministic Turing machine?",
+    "bucket": "long",
+    "n_tokens": 23
+  },
+  {
+    "id": 78,
+    "question": "What is the most critical resource measured to in assessing the determination of a Turing machine's ability to solve any given set of problems?",
+    "bucket": "long",
+    "n_tokens": 24
+  },
+  {
+    "id": 79,
+    "question": "What is not used for a precise definition of what it means to solve a problem using a given amount of time and space?",
+    "bucket": "long",
+    "n_tokens": 24
+  },
+  {
+    "id": 80,
+    "question": "What is the expression used to identify any given series of solutions capable of being solved within time on a deterministic Turing machine?",
+    "bucket": "long",
+    "n_tokens": 23
+  },
+  {
+    "id": 81,
+    "question": "What is the least critical resource measured in assessing the determination of a Turing machine's ability to solve any given set of problems?",
+    "bucket": "long",
+    "n_tokens": 23
+  },
+  {
+    "id": 82,
+    "question": "Decision problems capable of being solved by a deterministic Turing machine while maintaining adherence to polynomial time belong to what class?",
+    "bucket": "long",
+    "n_tokens": 21
+  },
+  {
+    "id": 83,
+    "question": "What is an example of a measurement within a complexity class that would create a bigger set of problems if the bounds were relaxed?",
+    "bucket": "long",
+    "n_tokens": 24
+  },
+  {
+    "id": 84,
+    "question": "What kind of statement is made in the effort of establishing the time and space requirements needed to enhance the ultimate number of problems solved?",
+    "bucket": "long",
+    "n_tokens": 25
+  },
+  {
+    "id": 85,
+    "question": "What is not an example of a measurement within a complexity class that would create a bigger set of problems if the bounds were relaxed?",
+    "bucket": "long",
+    "n_tokens": 25
+  },
+  {
+    "id": 86,
+    "question": "What kind of statement is not made in an effort of establishing the time and space requirements needed to enhance the ultimate number of problems solved?",
+    "bucket": "long",
+    "n_tokens": 26
+  },
+  {
+    "id": 87,
+    "question": "According to reduction, if X and Y can be solved by the same algorithm then X performs what function in relationship to Y?",
+    "bucket": "long",
+    "n_tokens": 23
+  },
+  {
+    "id": 88,
+    "question": "What would need to remain constant in a multiplication algorithm to produce the same outcome whether multiplying or squaring two integers?",
+    "bucket": "long",
+    "n_tokens": 21
+  },
+  {
+    "id": 89,
+    "question": "What does one not need to remain constant in a multiplication algorithm to produce the same outcome whether multiplying or squaring two integers?",
+    "bucket": "long",
+    "n_tokens": 23
+  },
+  {
+    "id": 90,
+    "question": "If P = NP is unsolved, and reduction is applied to a known NP-complete problem vis a vis \u03a02 to  \u03a01, what conclusion can be drawn for \u03a01?",
+    "bucket": "long",
+    "n_tokens": 28
+  },
+  {
+    "id": 91,
+    "question": "If P is ultimately proven to be equal tot NP, what effect would this have on the efficiency of problems?",
+    "bucket": "long",
+    "n_tokens": 20
+  },
+  {
+    "id": 92,
+    "question": "Who are commonly associated with the algorithm typically considered the most effective with respect to finite polynomial hierarchy and graph isomorphism?",
+    "bucket": "long",
+    "n_tokens": 21
+  },
+  {
+    "id": 93,
+    "question": "The integer factorization problem essentially seeks to determine if the value of of an input is less than what variable?",
+    "bucket": "long",
+    "n_tokens": 20
+  },
+  {
+    "id": 94,
+    "question": "What is unknown about the complexity classes between L and P that further prevents determining the value relationship between L and P?",
+    "bucket": "long",
+    "n_tokens": 22
+  },
+  {
+    "id": 95,
+    "question": "What does not lie between L and P that allows a definitive determination of the relationship between L and P?",
+    "bucket": "long",
+    "n_tokens": 20
+  },
+  {
+    "id": 96,
+    "question": "If NP is not equal to P, viewed through this lens, what type of problems can also be considered intractable?",
+    "bucket": "long",
+    "n_tokens": 20
+  },
+  {
+    "id": 97,
+    "question": "What are problems that cannot be solved in theory, but which in practice take too long for their solutions to be useful?",
+    "bucket": "long",
+    "n_tokens": 22
+  },
+  {
+    "id": 98,
+    "question": "What states that only problems that cannot be solved in polynomial time can be feasibly computed on some computational device?",
+    "bucket": "long",
+    "n_tokens": 20
+  },
+  {
+    "id": 99,
+    "question": "When would a program not be useful for very small instances and in that sense the intractability of a problem is somewhat independent of technological progress?",
+    "bucket": "long",
+    "n_tokens": 26
+  }
+]
