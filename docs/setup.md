@@ -2,113 +2,102 @@
 
 ## Prerequisites
 
-Install locally (one-time):
-
 ```bash
-pip install awscli aws-sam-cli docker
-pip install optimum[onnxruntime] transformers torch sentence-transformers  # export only
-pip install onnxruntime tokenizers numpy datasets huggingface_hub          # runtime
+pip install awscli aws-sam-cli
+pip install -r scripts/requirements-dev.txt   # export-only deps: optimum, torch, sentence-transformers
 ```
 
-## Step 1 — Export model to ONNX
+Docker must be installed and running locally (SAM builds container images).
 
-Downloads MiniLM-L6-v2 from Hugging Face and exports to `lambda/onnx/`:
+## Step 1 — Export the model (local only, not committed)
 
 ```bash
 python scripts/export_to_onnx.py
 ```
 
-Output: `lambda/onnx/model.onnx` (~88 MB) and `lambda/onnx/tokenizer.json`.
-Commit both files — they are the only artifacts needed for the Docker build.
+Downloads `sentence-transformers/all-MiniLM-L6-v2` from Hugging Face and writes:
 
-> **Note**: `model.onnx` is 88 MB. GitHub accepts files up to 100 MB.
-> If you hit push limits, enable Git LFS: `git lfs track "*.onnx"`.
+- `model/onnx/` — ONNX graph + full HF tokenizer files (~88 MB)
+- `model/pytorch/` — full sentence-transformers model (~91 MB)
 
-## Step 2 — Pre-compute question embeddings
+**Both folders are gitignored — never commit them.** Every teammate (or fresh
+clone) must re-run this script once before building. The Dockerfiles `COPY`
+these folders directly into the container image at build time.
 
-Downloads 1 000 SQuAD questions and encodes them using the ONNX model:
+## Step 2 — Data (already committed, nothing to do)
+
+`data/corpus_questions.json`, `data/corpus_embeddings.npy`, and
+`data/user_questions.json` are already in the repo. Only re-run
+`scripts/precompute_embeddings.py` / `scripts/curate_user_questions.py` if you
+want to regenerate them with different parameters.
+
+## Step 3 — Test handlers locally (no AWS needed)
 
 ```bash
-python scripts/precompute_embeddings.py
+python scripts/test_handlers_locally.py
 ```
 
-Output: `lambda/shared/data/questions.json` and `lambda/shared/data/embeddings.npy`.
-Commit both — they are baked into the Docker image at build time.
+Confirms both ONNX and PyTorch handlers return matching top-5 results.
 
-## Step 3 — Build and test the Docker image locally
+## Step 4 — Build and test a Docker image locally (optional)
 
 ```bash
 docker build -f lambda/onnx/Dockerfile -t minilm-onnx .
-
-# Run locally on port 9000
 docker run -p 9000:8080 minilm-onnx
 
-# Test in a second terminal
 curl -X POST http://localhost:9000/2015-03-31/functions/function/invocations \
   -H "Content-Type: application/json" \
   -d '{"body": "{\"query\": \"Who invented the telephone?\", \"top_k\": 5}"}'
 ```
 
-## Step 4 — Deploy with SAM
+Swap `onnx` for `pytorch` to test the other variant. Build context must be the
+repo root (the `.` at the end) — both Dockerfiles reference `data/` and
+`model/` relative to root, not relative to `lambda/onnx/`.
+
+## Step 5 — Deploy with SAM
 
 ```bash
-# First deploy (interactive — sets region, stack name, ECR repo)
 sam build
-sam deploy --guided
-
-# Subsequent deploys
-sam build && sam deploy
+sam deploy --guided   # first time: sets region, stack name, ECR repo
+# sam build && sam deploy   for subsequent deploys
 ```
 
-SAM will:
-1. Create an ECR repository automatically
-2. Push the Docker image
-3. Deploy the Lambda + HTTP API endpoint
-
-At the end of the deploy, the endpoint URL is printed:
+SAM deploys **both** functions from one template. At the end you'll see:
 
 ```
 Outputs:
-  SearchEndpoint = https://<api-id>.execute-api.<region>.amazonaws.com/search
+  OnnxEndpoint    = https://<api-id>.execute-api.<region>.amazonaws.com/onnx/search
+  PytorchEndpoint = https://<api-id>.execute-api.<region>.amazonaws.com/pytorch/search
 ```
 
-## Step 5 — Verify the endpoint
+## Step 6 — Verify both endpoints
 
 ```bash
-ENDPOINT="https://<api-id>.execute-api.<region>.amazonaws.com/search"
+curl -s -X POST "$ONNX_ENDPOINT" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "Who invented the telephone?", "top_k": 5}' | python -m json.tool
 
-curl -s -X POST $ENDPOINT \
+curl -s -X POST "$PYTORCH_ENDPOINT" \
   -H "Content-Type: application/json" \
   -d '{"query": "Who invented the telephone?", "top_k": 5}' | python -m json.tool
 ```
 
-Expected response:
-
-```json
-{
-  "query": "Who invented the telephone?",
-  "results": [
-    {"rank": 1, "score": 0.87, "question": "..."},
-    ...
-  ]
-}
-```
-
 ## Tuning memory
 
-Memory is set via the `MemorySize` SAM parameter (default 512 MB).
-To override at deploy time:
+Both functions share the `MemorySize` parameter (default 1024 MB):
 
 ```bash
-sam deploy --parameter-overrides MemorySize=1024
+sam deploy --parameter-overrides MemorySize=2048
 ```
-
-Higher memory also increases CPU allocation, which speeds up cold start and inference.
 
 ## Gotchas
 
-- **LabRole**: SAM uses `arn:aws:iam::<account-id>:role/LabRole`. Do not change the role name.
-- **ECR must exist in the same region** as the Lambda. SAM creates it automatically on first deploy.
-- **Cold start**: ~1–2 s (ONNX model load + embedding index load). Subsequent calls are <100 ms.
-- **sam build requires Docker** to be running locally.
-- **AWS Academy sessions expire**: if credentials expire mid-deploy, re-start the lab and re-run `aws configure` before retrying.
+- **LabRole**: SAM uses `arn:aws:iam::<account-id>:role/LabRole` — do not
+  change the role name, AWS Academy Learner Lab doesn't allow creating new
+  IAM roles.
+- **Run Step 1 before `sam build`** — the build will fail with a
+  missing-file error if `model/onnx/` and `model/pytorch/` don't exist yet.
+- **Docker must be running** for `sam build`.
+- **AWS Academy sessions expire** after ~4 hours — if credentials go stale
+  mid-deploy, restart the Learner Lab and refresh `~/.aws/credentials`
+  before retrying.

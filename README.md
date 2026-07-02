@@ -1,62 +1,44 @@
 # MiniLM Lambda Eval
 
-Semantic search over SQuAD questions using MiniLM-L6 exported to ONNX.
-Designed to run on AWS with minimal dependencies (no PyTorch at inference time).
+Performance and scalability evaluation of AWS Lambda serving MiniLM-L6-v2 for
+sentence similarity inference. Given a query question, the model retrieves the
+top-5 most similar questions from a pre-indexed SQuAD corpus — simulating FAQ /
+support-thread matching.
+
+Two Lambda variants are deployed side by side for comparison:
+
+- **ONNX** (`lambda/onnx/`) — onnxruntime + transformers tokenizer, no PyTorch at inference
+- **PyTorch** (`lambda/pytorch/`) — sentence-transformers, standard inference path
 
 ---
 
-## Setup
+## Repository structure
+
+    data/               Pre-computed corpus embeddings + curated benchmark queries (committed)
+    lambda/onnx/        ONNX variant: handler, Dockerfile, requirements
+    lambda/pytorch/     PyTorch variant: handler, Dockerfile, requirements
+    lambda/shared/      Shared cosine-similarity top-k lookup
+    scripts/            One-time local scripts (model export, embedding precompute, tests)
+    template.yaml       AWS SAM template — deploys both variants
+    docs/setup.md       Full deployment walkthrough
+
+## Quick start
+
+Full instructions: [docs/setup.md](docs/setup.md). Short version:
 
 ```bash
-uv venv .venv --seed
-uv pip install sentence-transformers optimum[onnxruntime] datasets huggingface_hub onnxruntime tokenizers numpy
+pip install -r scripts/requirements-dev.txt
+python scripts/export_to_onnx.py    # generates model/onnx/ and model/pytorch/ locally (gitignored)
+sam build
+sam deploy --guided
 ```
 
----
+## Data
 
-## Step 1 — Download the model
+`data/corpus_questions.json` + `data/corpus_embeddings.npy` — ~2000 SQuAD
+questions, pre-embedded with MiniLM. `data/user_questions.json` — 100
+benchmark queries (disjoint from the corpus), bucketed by length
+(short/medium/long) for the input-size load testing experiments.
 
-The model (`all-MiniLM-L6-v2`) is already included in `minilm-model/`.
-If you need to re-download it, run:
-
-```python
-from sentence_transformers import SentenceTransformer
-SentenceTransformer("all-MiniLM-L6-v2").save("./minilm-model")
-```
-
----
-
-## Step 2 — Export to ONNX
-
-Run once to convert the PyTorch model to ONNX format (requires PyTorch and `optimum`):
-
-```bash
-python export_onnx.py
-```
-
-This produces `minilm-onnx/model.onnx` and `minilm-onnx/tokenizer.json`.
-These two files are the only ones needed at inference time.
-
----
-
-## Step 3 — Run semantic search
-
-```bash
-python main.py
-```
-
-Optional arguments:
-
-| Flag | Default | Description |
-|------|---------|-------------|
-| `--n` | 100000 | Number of SQuAD questions to index |
-| `--top` | 5 | Top results shown per query |
-
-Example:
-
-```bash
-python main.py --n 5000 --top 10
-```
-
-Queries are loaded from `queries.json` (100 pre-defined questions).
-Results show the most semantically similar SQuAD questions for each query.
+Both are committed directly — see `scripts/precompute_embeddings.py` and
+`scripts/curate_user_questions.py` if you need to regenerate them.
