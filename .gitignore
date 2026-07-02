@@ -1,14 +1,29 @@
+# Python
 .venv/
 __pycache__/
 *.pyc
 
-# HuggingFace model cache (large binaries, regenerate with export_onnx.py)
-minilm-model/
-minilm-onnx/
+# HuggingFace / model exports (regenerate with scripts/export_to_onnx.py)
+model/onnx/
+model/pytorch/
 
 # Downloaded dataset cache
 squad-cache/
 
-# Local model export (regenerate with scripts/export_to_onnx.py)
-model/onnx/
-model/pytorch/
+# AWS / SAM build artifacts
+.aws-sam/
+.aws/
+*.pem
+
+# Local test artifacts (from `aws lambda invoke` testing)
+response.json
+payload.json
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

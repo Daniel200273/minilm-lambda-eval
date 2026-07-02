@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: MiniLM-L6-v2 semantic search — ONNX vs PyTorch on Lambda
+
+Parameters:
+  MemorySize:
+    Type: Number
+    Default: 1024
+    AllowedValues: [512, 1024, 2048, 3008]
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: !Ref MemorySize
+    Architectures: [x86_64]
+
+Resources:
+  OnnxFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
+      Events:
+        Search:
+          Type: HttpApi
+          Properties:
+            Path: /onnx/search
+            Method: POST
+    Metadata:
+      DockerfileUri: lambda/onnx/Dockerfile
+      DockerContext: .
+      DockerTag: onnx-latest
+
+  PytorchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
+      Events:
+        Search:
+          Type: HttpApi
+          Properties:
+            Path: /pytorch/search
+            Method: POST
+    Metadata:
+      DockerfileUri: lambda/pytorch/Dockerfile
+      DockerContext: .
+      DockerTag: pytorch-latest
+
+Outputs:
+  OnnxEndpoint:
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/onnx/search"
+  PytorchEndpoint:
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/pytorch/search"
