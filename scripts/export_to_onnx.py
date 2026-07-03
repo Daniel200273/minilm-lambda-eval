@@ -15,7 +15,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ONNX_DIR = os.path.join(REPO_ROOT, "model", "onnx")
 PYTORCH_DIR = os.path.join(REPO_ROOT, "model", "pytorch")
 
-UNUSED_DOMAINS_TO_PATCH = {"ai.onnx.ml": 3}
+#UNUSED_DOMAINS_TO_PATCH = {"ai.onnx.ml": 3}
 
 def dir_size_mb(path):
     total = 0
@@ -24,26 +24,26 @@ def dir_size_mb(path):
             total += os.path.getsize(os.path.join(dirpath, name))
     return total / (1024 * 1024)
 
-def patch_unused_opset_stamps(onnx_model_path):
-    model = onnx.load(onnx_model_path)
-    domains_used = {node.domain for node in model.graph.node}
+# def patch_unused_opset_stamps(onnx_model_path):
+#     model = onnx.load(onnx_model_path)
+#     domains_used = {node.domain for node in model.graph.node}
 
-    changed = False
-    for op in model.opset_import:
-        if op.domain in UNUSED_DOMAINS_TO_PATCH:
-            if op.domain in domains_used:
-                raise RuntimeError(
-                    f"Refusing to patch domain {op.domain!r} - it IS used "
-                    f"by the graph. Re-check before exporting."
-                )
-            target_version = UNUSED_DOMAINS_TO_PATCH[op.domain]
-            print(f"  Patching unused domain {op.domain!r}: "
-                  f"opset {op.version} -> {target_version}")
-            op.version = target_version
-            changed = True
+#     changed = False
+#     for op in model.opset_import:
+#         if op.domain in UNUSED_DOMAINS_TO_PATCH:
+#             if op.domain in domains_used:
+#                 raise RuntimeError(
+#                     f"Refusing to patch domain {op.domain!r} - it IS used "
+#                     f"by the graph. Re-check before exporting."
+#                 )
+#             target_version = UNUSED_DOMAINS_TO_PATCH[op.domain]
+#             print(f"  Patching unused domain {op.domain!r}: "
+#                   f"opset {op.version} -> {target_version}")
+#             op.version = target_version
+#             changed = True
 
-    if changed:
-        onnx.save(model, onnx_model_path)
+#     if changed:
+#         onnx.save(model, onnx_model_path)
 
 def main():
     os.makedirs(ONNX_DIR, exist_ok=True)
@@ -59,10 +59,10 @@ def main():
         library_name="transformers",
     )
 
-    onnx_model_path = os.path.join(ONNX_DIR, "model.onnx")
-    print("Checking for unused opset domain stamps...")
-    patch_unused_opset_stamps(onnx_model_path)
-    
+    # onnx_model_path = os.path.join(ONNX_DIR, "model.onnx")
+    # print("Checking for unused opset domain stamps...")
+    # patch_unused_opset_stamps(onnx_model_path)
+
     print(f"Saving full PyTorch model to {PYTORCH_DIR} ...")
     model = SentenceTransformer(MODEL_ID)
     model.save(PYTORCH_DIR)

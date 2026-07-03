@@ -1,3 +1,3 @@
 onnxruntime
 transformers
-numpy<2
+numpy
