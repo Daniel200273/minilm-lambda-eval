@@ -2,9 +2,14 @@
 
 ## Prerequisites
 
+Set up a Python 3.11 environment (matches the Lambda runtime) using whichever
+tool you prefer — `venv`, `uv`, miniconda/`conda`, etc. — then install the
+export-only deps declared in [`pyproject.toml`](../pyproject.toml)
+(sentence-transformers, torch, optimum, onnxruntime, ...):
+
 ```bash
+pip install -e ".[dev]"
 pip install awscli aws-sam-cli
-pip install -r scripts/requirements-dev.txt   # export-only deps: optimum, torch, sentence-transformers
 ```
 
 Docker must be installed and running locally (SAM builds container images).

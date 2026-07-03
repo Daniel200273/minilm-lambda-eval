@@ -1,0 +1,18 @@
+[project]
+name = "minilm-lambda-eval"
+version = "0.1.0"
+description = "Performance and scalability evaluation of AWS Lambda serving MiniLM-L6-v2"
+requires-python = "==3.11.*"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "sentence-transformers",
+    "torch",
+    "optimum",
+    "optimum-onnx",
+    "onnxruntime",
+    "transformers",
+    "datasets",
+    "numpy",
+]
