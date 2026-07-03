@@ -6,3 +6,4 @@ onnxruntime
 transformers
 datasets
 numpy
+onnx
