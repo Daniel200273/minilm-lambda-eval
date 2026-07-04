@@ -1,0 +1,8 @@
+version = 0.1
+
+[default.deploy.parameters]
+stack_name        = "minilm-lambda-eval"
+region            = "us-east-1"
+resolve_s3        = true
+confirm_changeset = false
+capabilities      = "CAPABILITY_IAM"

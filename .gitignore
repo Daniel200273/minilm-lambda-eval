@@ -28,3 +28,7 @@ payload.json
 Thumbs.db
 .vscode/
 .idea/
+
+# Models
+minilm-model/
+minilm-onnx/

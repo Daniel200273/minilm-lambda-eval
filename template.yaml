@@ -3,22 +3,37 @@ Transform: AWS::Serverless-2016-10-31
 Description: MiniLM-L6-v2 semantic search — ONNX vs PyTorch on Lambda
 
 Parameters:
-  MemorySize:
+  OnnxMemorySize:
     Type: Number
-    Default: 1024
-    AllowedValues: [512, 1024, 2048, 3008]
+    # Cold start streams onnxruntime's shared libraries out of the container
+    # image; needs the extra vCPU that high memory unlocks to init within the
+    # 30 s API Gateway limit. At 1024 MB it times out.
+    Default: 3008
+    AllowedValues: [1024, 2048, 3008]
+  PytorchMemorySize:
+    Type: Number
+    # torch container is heavy (~2.9 GB); needs the vCPU headroom to cold-start
+    # within the 30 s limit.
+    Default: 3008
+    AllowedValues: [1024, 2048, 3008]
 
 Globals:
   Function:
     Timeout: 30
-    MemorySize: !Ref MemorySize
     Architectures: [x86_64]
 
 Resources:
+  # NOTE: images are referenced by an explicit ImageUri (built & pushed by hand,
+  # see docs/setup.md) rather than SAM's `Metadata: DockerfileUri` build. On
+  # Windows `sam build` silently produces no image for PackageType: Image
+  # functions, so we build with `docker build` and push to ECR ourselves. Bump
+  # the tag whenever the image changes so CloudFormation redeploys it.
   OnnxFunction:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Image
+      ImageUri: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/minilm-onnx:py312"
+      MemorySize: !Ref OnnxMemorySize
       Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
       Events:
         Search:
@@ -26,15 +41,13 @@ Resources:
           Properties:
             Path: /onnx/search
             Method: POST
-    Metadata:
-      DockerfileUri: lambda/onnx/Dockerfile
-      DockerContext: .
-      DockerTag: onnx-latest
 
   PytorchFunction:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Image
+      ImageUri: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/minilm-pytorch:py312"
+      MemorySize: !Ref PytorchMemorySize
       Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
       Events:
         Search:
@@ -42,10 +55,6 @@ Resources:
           Properties:
             Path: /pytorch/search
             Method: POST
-    Metadata:
-      DockerfileUri: lambda/pytorch/Dockerfile
-      DockerContext: .
-      DockerTag: pytorch-latest
 
 Outputs:
   OnnxEndpoint:

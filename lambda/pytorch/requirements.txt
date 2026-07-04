@@ -1,4 +1,4 @@
 sentence-transformers
-torch
+# torch is installed separately in the Dockerfile (CPU-only wheel)
 numpy
 
