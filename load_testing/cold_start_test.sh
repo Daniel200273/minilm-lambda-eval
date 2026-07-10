@@ -65,7 +65,7 @@ echo "=== Cold start (forced): $VARIANT | $NUM requests | function=$FN_NAME ==="
 
 for i in $(seq 1 "$NUM"); do
   # Force invalidation of any existing warm environment
-  CACHE_BUST=$(date +%s%N)
+  CACHE_BUST="${i}-$(date +%s)-$RANDOM"
   aws lambda update-function-configuration \
     --function-name "$FN_NAME" \
     --environment "Variables={CACHE_BUST=$CACHE_BUST}" \
@@ -83,12 +83,12 @@ for i in $(seq 1 "$NUM"); do
   fi
 
   TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-  T0=$(date +%s%3N)
+  T0=$(python3 -c 'import time; print(int(time.time()*1000))')
   CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$ENDPOINT" \
       -H "Content-Type: application/json" \
       -d '{"query": "Who invented the telephone?", "top_k": 5}' \
       --max-time 65 || echo "000")
-  T1=$(date +%s%3N)
+  T1=$(python3 -c 'import time; print(int(time.time()*1000))')
   MS=$((T1 - T0))
 
   echo "$i,$TS,$CODE,$MS,1" >> "$OUTFILE"
