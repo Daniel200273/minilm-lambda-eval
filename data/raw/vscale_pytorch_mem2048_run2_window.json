@@ -1,0 +1,9 @@
+{
+  "name": "vscale_pytorch_mem2048_run2",
+  "mode": "shaped",
+  "variant": "pytorch",
+  "bucket": "all",
+  "top_k": 5,
+  "start": "2026-07-10T22:38:49Z",
+  "end": "2026-07-10T22:40:10Z"
+}

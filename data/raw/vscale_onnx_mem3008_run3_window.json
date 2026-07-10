@@ -1,0 +1,9 @@
+{
+  "name": "vscale_onnx_mem3008_run3",
+  "mode": "shaped",
+  "variant": "onnx",
+  "bucket": "all",
+  "top_k": 5,
+  "start": "2026-07-10T22:50:19Z",
+  "end": "2026-07-10T22:51:39Z"
+}
