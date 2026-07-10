@@ -1,9 +1,0 @@
-{
-  "name": "burst_onnx_n10_run5",
-  "mode": "burst",
-  "variant": "onnx",
-  "bucket": "all",
-  "top_k": 5,
-  "start": "2026-07-10T19:37:05Z",
-  "end": "2026-07-10T19:37:36Z"
-}
