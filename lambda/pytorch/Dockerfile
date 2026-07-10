@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/wh
 COPY lambda/pytorch/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY model/pytorch/  /var/task/model/pytorch/
+COPY --chmod=755 model/pytorch/  /var/task/model/pytorch/
 COPY data/  /var/task/data/
 COPY lambda/shared/similarity.py  /var/task/shared/similarity.py
 COPY lambda/pytorch/handler.py  /var/task/

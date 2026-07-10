@@ -34,6 +34,7 @@ Resources:
       PackageType: Image
       ImageUri: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/minilm-onnx:py312"
       MemorySize: !Ref OnnxMemorySize
+      ReservedConcurrentExecutions: 10
       Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
       Events:
         Search:
@@ -46,8 +47,9 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Image
-      ImageUri: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/minilm-pytorch:py312"
+      ImageUri: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/minilm-pytorch:py312-clean-1783347165"
       MemorySize: !Ref PytorchMemorySize
+      ReservedConcurrentExecutions: 10
       Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
       Events:
         Search:
