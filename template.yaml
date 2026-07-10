@@ -7,19 +7,19 @@ Parameters:
     Type: Number
     # Cold start streams onnxruntime's shared libraries out of the container
     # image; needs the extra vCPU that high memory unlocks to init within the
-    # 30 s API Gateway limit. At 1024 MB it times out.
+    # 60 s API Gateway limit. At 1024 MB it times out.
     Default: 3008
-    AllowedValues: [1024, 2048, 3008]
+    AllowedValues:  [1024, 2048, 3008, 6144, 10240]
   PytorchMemorySize:
     Type: Number
     # torch container is heavy (~2.9 GB); needs the vCPU headroom to cold-start
-    # within the 30 s limit.
+    # within the 60 s limit.
     Default: 3008
-    AllowedValues: [1024, 2048, 3008]
+    AllowedValues:  [1024, 2048, 3008, 6144, 10240]
 
 Globals:
   Function:
-    Timeout: 30
+    Timeout: 60
     Architectures: [x86_64]
 
 Resources:

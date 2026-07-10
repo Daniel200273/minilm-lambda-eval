@@ -9,7 +9,7 @@
 set -euo pipefail
 
 echo "=== Installing system packages ==="
-sudo dnf install -y python3-pip git
+sudo dnf install -y python3-pip git gcc python3-devel
 
 echo "=== Installing Locust ==="
 pip3 install --user locust
