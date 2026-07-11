@@ -7,6 +7,9 @@ import time
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
+import torch
+torch.set_num_threads(1)
+
 ROOT = os.environ.get("LAMBDA_TASK_ROOT", os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "shared"))
 from similarity import top_k_similar  # noqa: E402
