@@ -1,27 +1,26 @@
 #!/usr/bin/env bash
-# Runs one Locust experiment headless and writes a sidecar _window.json
-# recording the exact UTC start/end. analysis/pull_cloudwatch.py reads that
-# window to fetch exactly the matching CloudWatch REPORT lines.
+# Runs a locustfile and saves the exact UTC start/end time to a sidecar JSON
+# file, so analysis/pull_cloudwatch.py can fetch exactly the right log window.
 #
-# Requires $HOST (API Gateway base URL, no path):
-#   export HOST="https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com"
+# Requires $HOST (API Gateway base URL, no path).
 #
 # Usage:
 #   ./run_experiment.sh <burst|shaped> <name> [extra locust args...]
-#
-# Examples:
-#   VARIANT=onnx ./run_experiment.sh burst burst_onnx_n10_run1 -u 10 -r 10 -t 30s
-#   VARIANT=onnx PEAK_USERS=25 SPAWN_RATE=5 ./run_experiment.sh shaped steady_onnx_p25_s5_run1
 
-set -euo pipefail
+set -uo pipefail
+# NOTE: deliberately NOT using -e for the whole script. Locust exits non-zero
+# whenever a run has ANY failed requests - which is the EXPECTED, WANTED
+# result for burst/steady tests above the concurrency limit, not an error.
+# Under -e that exit code would kill this script before it ever wrote
+# _window.json, silently truncating every test campaign at the first N value
+# with real failures. The `|| true` below is what fixes that.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 OUT_DIR="$REPO_ROOT/data/raw"
 
 if [ -z "${HOST:-}" ]; then
-  echo "ERROR: \$HOST is not set." >&2
-  echo "  export HOST=\"https://<api-id>.execute-api.us-east-1.amazonaws.com\"" >&2
+  echo "Error: \$HOST is not set." >&2
   exit 1
 fi
 
@@ -32,33 +31,34 @@ shift 2
 case "$MODE" in
   burst)  LOCUSTFILE="locustfile_burst.py" ;;
   shaped) LOCUSTFILE="locustfile_shaped.py" ;;
-  *) echo "ERROR: unknown mode '$MODE' (use 'burst' or 'shaped')" >&2; exit 1 ;;
+  *) echo "Unknown mode: $MODE (use 'burst' or 'shaped')"; exit 1 ;;
 esac
 
 mkdir -p "$OUT_DIR"
-PREFIX="$OUT_DIR/${NAME}"
+CSV_PREFIX="$OUT_DIR/${NAME}"
 
-# cd so locust can import common.py as a sibling module
 cd "$SCRIPT_DIR"
 
 START_TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-echo "--- [$NAME] mode=$MODE variant=${VARIANT:-onnx} bucket=${QUESTION_BUCKET:-all} start=$START_TS"
+echo "[$NAME] mode=$MODE variant=${VARIANT:-onnx} start=$START_TS"
 
 locust -f "$LOCUSTFILE" --host "$HOST" --headless --only-summary \
-       --csv "$PREFIX" "$@"
+       --csv "$CSV_PREFIX" "$@" || true
+# ^ `|| true`: a non-zero exit here means "the test ran and recorded
+# failures," not "the test itself broke." We still want window.json written
+# and the calling script to continue to the next run either way.
 
 END_TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+echo "[$NAME] end=$END_TS"
 
-cat > "${PREFIX}_window.json" <<EOF
+cat > "${CSV_PREFIX}_window.json" <<EOF
 {
   "name": "$NAME",
   "mode": "$MODE",
   "variant": "${VARIANT:-onnx}",
-  "bucket": "${QUESTION_BUCKET:-all}",
-  "top_k": ${TOP_K:-5},
   "start": "$START_TS",
   "end": "$END_TS"
 }
 EOF
 
-echo "--- [$NAME] end=$END_TS  ->  ${PREFIX}_stats.csv + ${PREFIX}_window.json"
+echo "Window saved: ${CSV_PREFIX}_window.json"
