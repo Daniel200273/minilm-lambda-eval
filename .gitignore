@@ -19,7 +19,7 @@ squad-cache/
 # Local test artifacts (from `aws lambda invoke` testing)
 response.json
 payload.json
-data/raw/
+backup/
 
 # Jupyter
 .ipynb_checkpoints/

@@ -1,9 +1,0 @@
-{
-  "name": "vscale_onnx_mem2048_run1",
-  "mode": "shaped",
-  "variant": "onnx",
-  "bucket": "all",
-  "top_k": 5,
-  "start": "2026-07-10T22:32:46Z",
-  "end": "2026-07-10T22:34:07Z"
-}
