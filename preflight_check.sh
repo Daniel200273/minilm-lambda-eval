@@ -61,6 +61,8 @@ else
   for path in onnx pytorch; do
     resp=$(curl -s -m 40 -X POST "$HOST_URL/$path/search" -H 'Content-Type: application/json' \
       -d '{"query":"preflight check","top_k":1}')
+    echo "  --- /$path/search response ---"
+    echo "$resp" | python3 -m json.tool 2>/dev/null || echo "$resp"
     if echo "$resp" | python3 -c "import sys,json; d=json.load(sys.stdin); exit(0 if 'results' in d else 1)" 2>/dev/null; then
       echo "  PASS  /$path/search returned real results"
     else
