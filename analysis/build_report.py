@@ -409,8 +409,12 @@ def figures56_vertical_scaling():
     else:
         print("  skip figure5: no ONNX vscale data")
 
-    # Figure 6: BOTH variants, p50 AND p99
-    fig, ax = plt.subplots(figsize=(8, 4.5))
+    # Figure 6: BOTH variants, p50 AND p99. Log scale + value labels, because
+    # PyTorch's p99 runs 10-100x larger than ONNX's - on a linear axis the
+    # ONNX bars flatten to invisible slivers. Log scale keeps everything
+    # readable at a glance; labels give exact numbers despite the compressed
+    # log spacing making bar heights harder to compare by eye alone.
+    fig, ax = plt.subplots(figsize=(9, 5))
     width = 60
     offsets = {"onnx": -1.5, "pytorch": 0.5}
     colors = {"onnx": ("#4C72B0", "#A6C8FF"), "pytorch": ("#DD8452", "#FFC8A6")}
@@ -419,17 +423,22 @@ def figures56_vertical_scaling():
         if not len(sub):
             continue
         x = sub["memory_mb"] + offsets[variant] * width
-        ax.bar(x, sub["p50_ms"], width=width, color=colors[variant][0], label=f"{variant} p50")
-        ax.bar(x + width, sub["p99_ms"], width=width, color=colors[variant][1], label=f"{variant} p99")
+        b1 = ax.bar(x, sub["p50_ms"], width=width, color=colors[variant][0], label=f"{variant} p50")
+        b2 = ax.bar(x + width, sub["p99_ms"], width=width, color=colors[variant][1], label=f"{variant} p99")
+        ax.bar_label(b1, fmt="%.0f", fontsize=7, padding=2)
+        ax.bar_label(b2, fmt="%.0f", fontsize=7, padding=2)
+    ax.set_yscale("log")
     ax.set_xlabel("Lambda memory (MiB)")
-    ax.set_ylabel("Response time (ms)")
+    ax.set_ylabel("Response time (ms, log scale)")
     ax.set_title("User-facing latency (p50, p99) by memory allocation")
     ax.set_xticks(tiers)
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=8, ncol=2)
+    top = ax.get_ylim()[1]
+    ax.set_ylim(top=top * 2.5)  # headroom so the top row of labels doesn't clip
     fig.tight_layout()
     fig.savefig(FIGURES / "figure6_latency_vs_memory.png", dpi=150)
     plt.close(fig)
-    print("  wrote figure5_billed_duration_vs_memory.png (ONNX only), figure6_latency_vs_memory.png (both, p50+p99)")
+    print("  wrote figure5_billed_duration_vs_memory.png (ONNX only), figure6_latency_vs_memory.png (both, p50+p99, log scale)")
 
 
 # ------------------------------------------------ Figure 7: tail latency ---

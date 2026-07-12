@@ -1,0 +1,3 @@
+variant,AvgT_ms,n_runs
+onnx,30.98385524926867,3
+pytorch,61.55305763670316,3
