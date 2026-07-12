@@ -1,0 +1,3 @@
+timestamp_ms,timestamp_utc,duration_ms,billed_duration_ms,memory_size_mb,max_memory_used_mb,init_duration_ms,cold_start
+1783808902427,2026-07-11T22:28:22.427000+00:00,20.71,21.0,3008,715,,0
+1783808937897,2026-07-11T22:28:57.897000+00:00,18.1,19.0,3008,715,,0
