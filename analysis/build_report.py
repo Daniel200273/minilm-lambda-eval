@@ -57,6 +57,12 @@ def save(df, name, index=False):
         (TABLES / f"{name}.md").write_text(df.to_markdown(index=index))
     except ImportError:
         pass
+    try:
+        (TABLES / f"{name}.tex").write_text(
+            df.to_latex(index=index, escape=True, na_rep="--", float_format="%.2f")
+        )
+    except ImportError:
+        pass
     print(f"  wrote {name}.csv ({len(df)} rows)")
 
 
@@ -364,6 +370,87 @@ def figure4_framework():
     print("  wrote figure4_framework.png")
 
 
+# --------------------------------------------- Figures 1-3: steady timelines --
+
+def figures123_steady_timelines():
+    """Client request generation vs server-side execution, one figure per
+    steady config (matches report Figures 1, 2, 3). ONNX only, run1 of each
+    config - these are illustrative single-run timelines, not averages."""
+    print("\nFigures 1-3 - Client vs server timelines (steady traffic, ONNX)")
+    configs = [(25, 5, "figure1_steady_p25_s5"),
+               (50, 10, "figure2_steady_p50_s10"),
+               (50, 5, "figure3_steady_p50_s5")]
+
+    for peak, step, fname in configs:
+        prefix = f"steady_onnx_p{peak}_s{step}_run1"
+        hist_path = RAW / f"{prefix}_stats_history.csv"
+        cw_path = RAW / f"{prefix}_cloudwatch.csv"
+        if not hist_path.exists() or not cw_path.exists():
+            print(f"  skip {fname}: missing {prefix}_stats_history.csv or _cloudwatch.csv")
+            continue
+
+        hist = pd.read_csv(hist_path)
+        hist = hist[hist["Name"].astype(str).str.strip() == "Aggregated"]
+        if hist.empty:
+            print(f"  skip {fname}: no Aggregated rows in stats_history")
+            continue
+        hist = hist.copy()
+        hist["t"] = hist["Timestamp"] - hist["Timestamp"].iloc[0]
+
+        cw = pd.read_csv(cw_path)
+        if cw.empty:
+            print(f"  skip {fname}: empty cloudwatch data")
+            continue
+        cw = cw.copy()
+        cw["t_sec"] = (cw["timestamp_ms"] / 1000).round().astype(int)
+        t0_server = cw["t_sec"].min()
+        cw["t"] = cw["t_sec"] - t0_server
+        t_max = int(cw["t"].max())
+
+        server_per_sec = cw.groupby("t").size().reindex(range(0, t_max + 1), fill_value=0)
+
+        starts = cw["timestamp_ms"] - cw["duration_ms"]
+        ends = cw["timestamp_ms"]
+        conc_per_sec = []
+        for s in range(0, t_max + 1):
+            lo = (s + t0_server) * 1000
+            hi = lo + 1000
+            conc_per_sec.append(int(((starts < hi) & (ends > lo)).sum()))
+
+        dur_per_sec = cw.groupby("t")["duration_ms"].agg(["min", "mean", "max"]) \
+                        .reindex(range(0, t_max + 1))
+
+        fig, axes = plt.subplots(3, 1, figsize=(9, 9), sharex=True)
+
+        axes[0].plot(hist["t"], hist["Requests/s"], color="purple",
+                     label="Client requests/s (sent)")
+        axes[0].bar(server_per_sec.index, server_per_sec.values, color="gray",
+                    alpha=0.6, width=1.0, label="Server invocations/s (processed)")
+        axes[0].set_ylabel("Requests/s")
+        axes[0].legend(fontsize=8)
+        axes[0].set_title(f"Client vs server execution - steady {peak} req/s, step {step}")
+
+        axes[1].plot(range(len(conc_per_sec)), conc_per_sec, color="red")
+        axes[1].set_ylabel("Concurrent executions")
+
+        axes[2].plot(dur_per_sec.index, dur_per_sec["min"], color="blue", label="MinT", alpha=0.7)
+        axes[2].plot(dur_per_sec.index, dur_per_sec["mean"], color="gold", label="AvgT", alpha=0.9)
+        axes[2].plot(dur_per_sec.index, dur_per_sec["max"], color="green",
+                     linestyle="--", label="MaxT", alpha=0.7)
+        axes[2].set_ylabel("Duration (ms)")
+        axes[2].set_xlabel("Elapsed time (s)")
+        axes[2].legend(fontsize=8)
+
+        fig.tight_layout()
+        fig.savefig(FIGURES / f"{fname}.png", dpi=150)
+        plt.close(fig)
+
+        client_end = hist["t"].max()
+        server_end = t_max
+        print(f"  wrote {fname}.png (client stopped at {client_end}s, "
+              f"server activity continued to {server_end}s)")
+
+
 # ------------------------------------------- Figures 5 & 6: vert scaling ---
 
 def figures56_vertical_scaling():
@@ -606,6 +693,7 @@ def main():
     table6_burst_vs_steady()
     table7_input_size("onnx")
     figure4_framework()
+    figures123_steady_timelines()
     figures56_vertical_scaling()
     figure7_tail_latency()
     figure8_ramp()
