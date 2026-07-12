@@ -1,0 +1,7 @@
+{
+  "name": "steady_onnx_p50_s10_run5",
+  "mode": "shaped",
+  "variant": "onnx",
+  "start": "2026-07-11T22:55:36Z",
+  "end": "2026-07-11T22:56:37Z"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "burst_onnx_n50_run1",
+  "mode": "burst",
+  "variant": "onnx",
+  "start": "2026-07-11T22:24:13Z",
+  "end": "2026-07-11T22:24:43Z"
+}

@@ -2,8 +2,6 @@
   "name": "inputsize_onnx_short_n10_run5",
   "mode": "burst",
   "variant": "onnx",
-  "bucket": "short",
-  "top_k": 5,
-  "start": "2026-07-11T21:32:57Z",
-  "end": "2026-07-11T21:33:27Z"
+  "start": "2026-07-11T23:25:46Z",
+  "end": "2026-07-11T23:26:17Z"
 }
