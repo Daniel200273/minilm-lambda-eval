@@ -15,4 +15,6 @@ dev = [
     "transformers",
     "datasets",
     "numpy",
+    "matplotlib",
+    "tabulate",
 ]

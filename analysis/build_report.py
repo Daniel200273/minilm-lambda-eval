@@ -27,6 +27,7 @@ Output:
 Every function skips gracefully (printing why) if its source files aren't
 present yet - safe to run partway through data collection, safe to re-run.
 """
+import math
 import warnings
 from datetime import datetime, timezone
 from pathlib import Path
@@ -620,11 +621,15 @@ def figure9_topk():
 
 # ----------------------------------------------- Table 9: cost analysis ----
 
-# Rates exactly as listed in the report's Table 8
+# Rates exactly as listed in the report's Table 9. billing_increment_ms and
+# min_duration_ms encode each platform's rounding rule: AWS bills to the
+# millisecond with no floor; GCP (1st gen) rounds up to the nearest 100 ms
+# and never bills less than 100 ms, even for a 5 ms invocation.
 PRICING = {
-    "AWS":   dict(gb_s=0.0000166667, per_inv=0.20e-6, free_gb_s_month=400_000, free_inv_month=1_000_000),
-    "Azure": dict(gb_s=0.000016,     per_inv=0.20e-6, free_gb_s_month=400_000, free_inv_month=1_000_000),
-    "GCP":   dict(gb_s=0.0000025,    per_inv=0.40e-6, free_gb_s_month=400_000, free_inv_month=2_000_000),
+    "AWS": dict(gb_s=0.0000166667, per_inv=0.20e-6, free_gb_s_month=400_000,
+                free_inv_month=1_000_000, billing_increment_ms=1, min_duration_ms=1),
+    "GCP": dict(gb_s=0.0000025,    per_inv=0.40e-6, free_gb_s_month=400_000,
+                free_inv_month=2_000_000, billing_increment_ms=100, min_duration_ms=100),
 }
 API_GW_PER_REQ = 1.00e-6  # $1 / million requests
 # NOTE: Sec 7.1's exact wording is ambiguous ("...are excluded from all three
@@ -640,12 +645,22 @@ MONTHS = 6
 DAYS = 30 * MONTHS
 
 
+def _bill_duration_ms(d, increment_ms, min_ms):
+    """Round a single measured duration up to the platform's billing
+    increment, then apply its minimum. Must be applied per-invocation,
+    not to an already-averaged duration — see note in table9_cost_analysis."""
+    billed = math.ceil(d / increment_ms) * increment_ms
+    return max(billed, min_ms)
+
 def table9_cost_analysis():
-    """Report Eq. 1, applied to the SAME measured billed duration across all
-    three FaaS platforms (their own methodology - not a real multi-cloud
-    deployment). Representative billed duration comes from the ONNX
-    framework-comparison runs (matches 'Lambda ONNX shown' in the report's
-    own Table 9 note)."""
+    """Report Eq. 1-2, applied per-platform: each individual invocation's
+    measured duration is rounded to that platform's own billing increment
+    BEFORE averaging, not the other way around. This matters because 99.76%
+    of our measured ONNX invocations are already under GCP's 100 ms floor,
+    so rounding the shared mean instead of each invocation would understate
+    GCP's real billed duration by ~3x. Representative durations come from
+    the ONNX framework-comparison runs (matches 'Lambda ONNX shown' in the
+    report's own Table 10 note)."""
     print("\nTable 9 - Cost analysis")
     durations_ms = []
     for prefix in find_prefixes("framework_onnx_50users_run*"):
@@ -655,18 +670,25 @@ def table9_cost_analysis():
     if not durations_ms:
         print("  skip: no billed_duration data (need framework_onnx_50users_run* collected)")
         return
-    d_billed = sum(durations_ms) / len(durations_ms)
-    print(f"  representative billed duration: {d_billed:.2f} ms "
-          f"(mean of {len(durations_ms)} ONNX framework invocations)")
+
+    # Round EACH invocation to its own platform's billing rule, then average.
+    billed_mean = {}
+    for platform, p in PRICING.items():
+        billed = [_bill_duration_ms(d, p["billing_increment_ms"], p["min_duration_ms"])
+                   for d in durations_ms]
+        billed_mean[platform] = sum(billed) / len(billed)
+        print(f"  {platform}: mean billed duration = {billed_mean[platform]:.2f} ms "
+              f"(increment={p['billing_increment_ms']}ms, floor={p['min_duration_ms']}ms, "
+              f"n={len(durations_ms)})")
 
     traffics = {"1K req/day": 1_000, "10K req/day": 10_000,
                 "100K req/day": 100_000, "1M req/day": 1_000_000}
     rows = []
     for label, per_day in traffics.items():
         total_req = per_day * DAYS
-        gb_s_per_req = (d_billed / 1000.0) * (MEMORY_MB / 1024.0)
         row = {"Traffic": label}
         for platform, p in PRICING.items():
+            gb_s_per_req = (billed_mean[platform] / 1000.0) * (MEMORY_MB / 1024.0)
             total_gb_s = gb_s_per_req * total_req
             billable_gb_s = max(0.0, total_gb_s - p["free_gb_s_month"] * MONTHS)
             billable_inv = max(0, total_req - p["free_inv_month"] * MONTHS)

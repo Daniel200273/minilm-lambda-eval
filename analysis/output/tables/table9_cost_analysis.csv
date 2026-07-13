@@ -1,5 +1,5 @@
-Traffic,AWS,Azure,GCP,EC2
-1K req/day,0.0,0.0,0.0,179.71
-10K req/day,0.0,0.0,0.0,179.71
-100K req/day,2.4,2.4,2.4,179.71
-1M req/day,275.09,265.48,103.24,179.71
+Traffic,AWS,GCP,EC2
+1K req/day,0.0,0.0,179.71
+10K req/day,0.0,0.0,179.71
+100K req/day,2.4,9.68,179.71
+1M req/day,275.09,194.03,179.71
